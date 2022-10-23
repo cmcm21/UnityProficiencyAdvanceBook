@@ -57,30 +57,29 @@ public class MazeDataEditor : Editor
 
         GUILayout.Label("Word Map",wordMapStyle);
         InitDefaultWorldMap();    
-        using (new GUILayout.VerticalScope(EditorStyles.helpBox)) {
-             using (new GUILayout.HorizontalScope()) {
-                 var wordMapSquare = _mazeData.WorldMapSquare;
-                 for (int i = 0; i < _mazeData.WorldMap.Count; i += wordMapSquare) {
-                     using (new GUILayout.VerticalScope()){
+        var wordMapSquare = _mazeData.WorldMapSquare;
+        
+        using (new GUILayout.VerticalScope(EditorStyles.helpBox)) 
+             using (new GUILayout.HorizontalScope()) 
+                 for (int i = 0; i < _mazeData.WorldMap.Count; i += wordMapSquare) 
+                     using (new GUILayout.VerticalScope())
                          for (int j = i; j < i + wordMapSquare; j++)
-                         {
-                             using (new GUILayout.VerticalScope())
-                             {
-                                 Color color = _mazeData.WorldMap[j] == TerrainType.WALL
-                                     ? Color.gray
-                                     : (Color)new Color32(194, 104, 35, 255);
+                             DrawWorldMapTile(j);
+    }
 
-                                 var rect = EditorGUILayout.GetControlRect(
-                                     GUILayout.Width(70), GUILayout.Height(70));
-                                 EditorGUI.DrawRect(rect, color);
-                                 
-                                 var option = (TerrainType)EditorGUILayout.EnumPopup(_mazeData.WorldMap[j]);
-                                 _mazeData.UpdateWorldMap(j,option);
-                             }
-                         }
-                     }
-                 }           
-             }           
+    private void DrawWorldMapTile(int index)
+    {
+        using (new GUILayout.VerticalScope())
+        {
+            Color color = _mazeData.WorldMap[index] == TerrainType.WALL
+                ? Color.gray
+                : (Color)new Color32(194, 104, 35, 255);
+
+            var rect = EditorGUILayout.GetControlRect(GUILayout.Width(70), GUILayout.Height(70));
+            EditorGUI.DrawRect(rect, color);
+
+            var option = (TerrainType)EditorGUILayout.EnumPopup(_mazeData.WorldMap[index]);
+            _mazeData.UpdateWorldMap(index, option);
         }
     }
 
