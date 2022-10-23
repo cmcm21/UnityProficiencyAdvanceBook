@@ -11,22 +11,40 @@ public class MazeDataEditor : Editor
     private MazeData _mazeData;
     private SerializedProperty _worldMapSizeProperty;
     private SerializedProperty _worldMapSquareProperty;
+    private SerializedProperty _terrainTypeXTextureProperty;
     private bool _drawWorldMap = false;
 
     private void OnEnable()
     {
         _worldMapSizeProperty = serializedObject.FindProperty("worldMapSize");
         _worldMapSquareProperty = serializedObject.FindProperty("worldMapSquare");
+        _terrainTypeXTextureProperty = serializedObject.FindProperty("terrainEnumXTextures");
         
         _mazeData = target as MazeData;
-        _drawWorldMap = _mazeData.WorldMap.Count != 0;
+        _drawWorldMap = WorldDrawed();
     }
 
     public override void OnInspectorGUI()
     {
-        serializedObject.Update();
+        //serializedObject.Update();
         DrawPrimitivesFields();
-        
+        GUILayout.Label("If you modify values, Clear world map is needed");
+        DrawWorldButton();
+        //Needed to update properties' values
+        serializedObject.ApplyModifiedProperties();
+    }
+    
+    private void DrawPrimitivesFields()
+    {
+        EditorGUILayout.PropertyField(_worldMapSizeProperty);
+        EditorGUILayout.PropertyField(_worldMapSquareProperty);
+        EditorGUILayout.PropertyField(_terrainTypeXTextureProperty);
+        if(GUILayout.Button("Update textures"))
+           _mazeData.UpdateTerrainDict();
+    }
+
+    private void DrawWorldButton()
+    {
         if (!_drawWorldMap)
         {
             _drawWorldMap = GUILayout.Button("Generate word map");
@@ -34,21 +52,21 @@ public class MazeDataEditor : Editor
                 DrawWorldMap();    
         }
         else
+        {
+            if (GUILayout.Button("Clear world map"))
+            {
+                _drawWorldMap = false;
+                _mazeData.ResetWordMap();
+            }
             DrawWorldMap();    
-        serializedObject.ApplyModifiedProperties();
-    }
-
-    private void DrawPrimitivesFields()
-    {
-        EditorGUILayout.PropertyField(_worldMapSizeProperty);
-        EditorGUILayout.PropertyField(_worldMapSquareProperty);
+        }       
     }
 
     private void DrawWorldMap()
     {
         if (_mazeData.WorldMapSize == 0 || _mazeData.WorldMapSquare == 0)
         {
-            Debug.LogError($"[{GetType()}]:: world map size or world map square is 0");
+            Debug.LogWarning($"[{GetType()}]:: world map size or world map square is 0");
             return;
         }
         EditorGUILayout.Space();
@@ -56,7 +74,9 @@ public class MazeDataEditor : Editor
         wordMapStyle.alignment = TextAnchor.MiddleCenter;
 
         GUILayout.Label("Word Map",wordMapStyle);
+        
         InitDefaultWorldMap();    
+        
         var wordMapSquare = _mazeData.WorldMapSquare;
         
         using (new GUILayout.VerticalScope(EditorStyles.helpBox)) 
@@ -71,15 +91,23 @@ public class MazeDataEditor : Editor
     {
         using (new GUILayout.VerticalScope())
         {
-            Color color = _mazeData.WorldMap[index] == TerrainType.WALL
-                ? Color.gray
-                : (Color)new Color32(194, 104, 35, 255);
+            var terrainType = _mazeData.WorldMap[index];
+            var texture = _mazeData.terrainEnumTexDict[terrainType];
 
-            var rect = EditorGUILayout.GetControlRect(GUILayout.Width(70), GUILayout.Height(70));
-            EditorGUI.DrawRect(rect, color);
+            var content = new GUIContent(texture);
+            content.tooltip = terrainType.ToString();
+            
+            var buttonClicked = GUILayout.Button(
+                content,
+                GUILayout.Height(60),
+                GUILayout.Width(50),
+                GUILayout.ExpandWidth(true),
+                GUILayout.ExpandHeight(true)
+                );
 
-            var option = (TerrainType)EditorGUILayout.EnumPopup(_mazeData.WorldMap[index]);
-            _mazeData.UpdateWorldMap(index, option);
+            //var option = (TerrainType)EditorGUILayout.EnumPopup(_mazeData.WorldMap[index]);
+            if (buttonClicked)
+                _mazeData.UpdateWorldMapNext(index, terrainType);
         }
     }
 
@@ -88,5 +116,10 @@ public class MazeDataEditor : Editor
         if (_mazeData.WorldMap.Count > 0) return;
         var defaultWorldMap = Enumerable.Repeat(TerrainType.GROUND, _mazeData.WorldMapSize).ToList(); 
         _mazeData.SetWordList(defaultWorldMap);
+    }
+
+    private bool WorldDrawed()
+    {
+        return _mazeData.WorldMap.Count > 0 && _mazeData.terrainEnumTexDict.Count > 0;
     }
 }
