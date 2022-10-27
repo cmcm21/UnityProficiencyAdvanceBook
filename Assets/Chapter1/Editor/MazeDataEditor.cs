@@ -12,6 +12,7 @@ public class MazeDataEditor : Editor
     private SerializedProperty _worldMapSizeProperty;
     private SerializedProperty _worldMapSquareProperty;
     private SerializedProperty _terrainTypeXTextureProperty;
+    private SerializedProperty _tileSizeProperty;
     private bool _drawWorldMap = false;
 
     private void OnEnable()
@@ -19,6 +20,7 @@ public class MazeDataEditor : Editor
         _worldMapSizeProperty = serializedObject.FindProperty("worldMapSize");
         _worldMapSquareProperty = serializedObject.FindProperty("worldMapSquare");
         _terrainTypeXTextureProperty = serializedObject.FindProperty("terrainEnumXTextures");
+        _tileSizeProperty = serializedObject.FindProperty("tileSize");
         
         _mazeData = target as MazeData;
         _drawWorldMap = WorldDrawed();
@@ -26,11 +28,12 @@ public class MazeDataEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        //serializedObject.Update();
+        //Needed to update properties' values
+        serializedObject.Update();
         DrawPrimitivesFields();
         GUILayout.Label("If you modify values, Clear world map is needed");
         DrawWorldButton();
-        //Needed to update properties' values
+        
         serializedObject.ApplyModifiedProperties();
     }
     
@@ -39,6 +42,7 @@ public class MazeDataEditor : Editor
         EditorGUILayout.PropertyField(_worldMapSizeProperty);
         EditorGUILayout.PropertyField(_worldMapSquareProperty);
         EditorGUILayout.PropertyField(_terrainTypeXTextureProperty);
+        EditorGUILayout.PropertyField(_tileSizeProperty);
         if(GUILayout.Button("Update textures"))
            _mazeData.UpdateTerrainDict();
     }
@@ -95,7 +99,7 @@ public class MazeDataEditor : Editor
             var texture = _mazeData.terrainEnumTexDict[terrainType];
 
             var content = new GUIContent(texture);
-            content.tooltip = terrainType.ToString();
+            content.tooltip = terrainType.ToString() + $": ({index})";
             
             var buttonClicked = GUILayout.Button(
                 content,

@@ -17,6 +17,9 @@ public class MazeData : ScriptableObject
 
     [SerializeField] private List<TerrainEnumXTexture> terrainEnumXTextures;
 
+    [SerializeField] private int tileSize;
+    public int TileSize => tileSize;
+
     private Dictionary<TerrainType, Texture> _terrainEnumTextDict;
     public Dictionary<TerrainType, Texture> terrainEnumTexDict
     {
