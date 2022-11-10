@@ -265,11 +265,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallsContainer: {fileID: 1080379366}
   wallPrefab: {fileID: 4303157715507588355, guid: caaee966d0db0d948bf58c47d249fc94, type: 3}
+  generateMazeOption: 1
   mazeDataRef:
-    m_AssetGUID: 13c8c7bc071bd524c962b39a8c26417f
+    m_AssetGUID: 769cf3fa51154f54b86c9b82d04a1276
     m_SubObjectName: 
     m_SubObjectType: 
-  loadMazeFromImage: 1
   mazeImage: {fileID: 2800000, guid: 4e403450b10595f4db5a181eae434b40, type: 3}
 --- !u!1 &705507993
 GameObject:

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<maze>
+   <object id = "object" 
+           mapSize = "100" 
+           mapSquare="10" 
+           wallSize="10" 
+           wallLocation="10,0,10" 
+           wallScale="1,2,1" 
+           wallColor="255,0,255" 
+   >
+   </object>
+</maze>
