@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 public class GenerateMazeRandom : MonoBehaviour
 {
     private const int WallHeight = 4;
+
+    [SerializeField] private GameObject player;
     
     [Header("Grid size")]
     [SerializeField] [Range(5, 100)] 
@@ -47,6 +49,7 @@ public class GenerateMazeRandom : MonoBehaviour
             Init(); 
             GenerateMazeBinary();
             RemoveWalls();
+            AddPlayer();
         }
         else
             Debug.LogError($"[{GetType()}]Ground or ceiling were not found");
@@ -59,7 +62,7 @@ public class GenerateMazeRandom : MonoBehaviour
         verticalWall.transform.localScale = new Vector3(0.1f, WallHeight, wallSize);
         _ground.transform.localScale = new Vector3((width + 1) * wallSize, 1, (height + 1) * wallSize);
 
-        _grid = new Compass[width, height];
+        _grid = new Compass[width+1, height+1];
         _gridObjectsHorizontal = new GameObject[width + 1, height + 1];
         _gridObjectsVertical = new GameObject[width + 1, height + 1];
         
@@ -75,9 +78,9 @@ public class GenerateMazeRandom : MonoBehaviour
         {
             for (int j = 0; j <= width; j++)
             {
-                if(i > 0) // we remove the vertical wall starting in 0 to can form a perfect square grid maze
+                if(i < height) 
                     _gridObjectsVertical[j, i] = InstantiateWall(true, i, j, xOffset, zOffset);
-                if(j > 0) // we remove the horizontal wall starting in 0 to can form a perfect square grid maze
+                if(j < width) 
                     _gridObjectsHorizontal[j, i] = InstantiateWall(false, i, j, xOffset, zOffset);
             }
         }
@@ -88,25 +91,27 @@ public class GenerateMazeRandom : MonoBehaviour
         GameObject wall;
         if (vertical)
         {
+            float verticalWallSize = verticalWall.transform.localScale.z;
             Vector3 wallPosition = new Vector3(
-                wallSize / 2.0f + j * wallSize + xOffset,
+                -verticalWallSize / 2.0f + j * verticalWallSize + xOffset,
                 wallSize / 2.0f,
-                // in vertical wall axe z has a size of 0.1 that why it doesn't need sum of the wall size here
-                i * wallSize + zOffset
+                i * verticalWallSize + zOffset
             );
             wall = Instantiate(verticalWall, wallPosition, Quaternion.identity,wallContainer.transform);
             wall.name = $"vertical wall({i},{j})";
+            wall.tag = "Wall";
         }
         else
         {
+            float horizontalWallSize = horizontalWall.transform.localScale.x;
             Vector3 wallPosition = new Vector3(
-                // in horizontal wall axe x has a size of 0.1 that why it doesn't need sum of the wall size here
-                j * wallSize + xOffset, 
+                j * horizontalWallSize + xOffset, 
                 wallSize / 2.0f,
-                wallSize / 2.0f + i * wallSize + zOffset
+                -(horizontalWallSize / 2.0f) + i * horizontalWallSize + zOffset
             );
             wall = Instantiate(horizontalWall, wallPosition, Quaternion.identity,wallContainer.transform);
             wall.name = $"horizontal wall({i},{j})";
+            wall.tag = "Wall";
         }
         return wall;
     }
@@ -135,26 +140,26 @@ public class GenerateMazeRandom : MonoBehaviour
 
     private bool CheckGridBoundariesBinaryGeneration(int row, int column, out Compass carvingDirection)
     {
-        bool onBondaries = false;
+        bool onBoundaries = false;
         carvingDirection = Compass.NONE;
         if (column == width - 1) // if we have reached most right wall
         {
-            onBondaries = true;
+            onBoundaries = true;
             if (row < height - 1) // if we haven't reached most up wall
                 carvingDirection = Compass.NORTH;
             else
                 carvingDirection = Compass.WEST;
         }
 
-        if (row == height - 1) // if we reach have reached most up wall
+        else if (row == height - 1) // if we reach have reached most up wall
         {
-            onBondaries = true;
+            onBoundaries = true;
             if (column < width - 1) // if we haven't reached most right wall
                 carvingDirection = Compass.EAST;
             else
                 carvingDirection = Compass.SOUTH;
         }
-        return onBondaries;
+        return onBoundaries;
     }
 
     private void RemoveWalls()
@@ -169,10 +174,16 @@ public class GenerateMazeRandom : MonoBehaviour
                 else if(tile == Compass.EAST)
                     _gridObjectsVertical[column + 1, row]?.SetActive(false);
                 else if(tile == Compass.WEST)
-                    _gridObjectsVertical[column - 1,row]?.SetActive(false);
-                else if(tile == Compass.SOUTH)
-                    _gridObjectsVertical[column,row - 1]?.SetActive(false);
+                    _gridObjectsVertical[column, row + 1]?.SetActive(false);
             }
         }
+    }
+
+    private void AddPlayer()
+    {
+        var xOffset = -(width * wallSize) / 2;
+        var zOffset = -(height * wallSize) / 2;
+
+        player.transform.position = new Vector3(xOffset, 3.0f, zOffset);
     }
 }
