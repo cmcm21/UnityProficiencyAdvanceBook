@@ -42,9 +42,9 @@ public class GenerateMazeRandom : MonoBehaviour
     private void Start()
     {
         _ground = GameObject.FindWithTag("Ground").transform;
-        //_ceiling = GameObject.FindWithTag("Ceiling").transform;
+        _ceiling = GameObject.FindWithTag("Ceiling").transform;
 
-        if (_ground != null) //&& _ceiling != null)
+        if (_ground != null && _ceiling != null)
         {
             Init(); 
             GenerateMazeBinary();
