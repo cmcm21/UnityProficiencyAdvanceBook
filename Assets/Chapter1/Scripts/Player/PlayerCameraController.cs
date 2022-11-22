@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCameraController : MonoBehaviour
@@ -11,50 +9,37 @@ public class PlayerCameraController : MonoBehaviour
 
     private Vector2 _mouseInput;
     private float _xRot;
-    private Quaternion _originalRotation;
+    private float _yRot;
     private bool _changeCamera;
     private int _currentCamera;
 
     private void Start()
     {
         _currentCamera = 0;
-        _originalRotation = transform.rotation;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
        GetInput(); 
-       //MoveCamera();
+       
        if(_changeCamera)
            ChangeCamera();
+       
+       MoveCamera();
     }
 
     private void GetInput()
     {
         _mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        _changeCamera = Input.GetKeyDown(KeyCode.Space);
+        _changeCamera = Input.GetKeyDown(KeyCode.J);
     }
 
     private void MoveCamera()
     {
-        _xRot = _mouseInput.y * sensitivity;
-        transform.localRotation = Quaternion.Euler(0.0f,_xRot,0.0f);
-        //StartCoroutine(ReturnToOriginalPosition());
-    }
-
-    private IEnumerator ReturnToOriginalPosition()
-    {
-        float time = 0;
-        while (time < returnSpeed)
-        {
-            time += Time.deltaTime;
-            var rotation = Quaternion.Lerp(transform.rotation, _originalRotation, time/returnSpeed);
-            transform.rotation = rotation;
-            yield return null;
-        }
+        _xRot -= _mouseInput.y * sensitivity;
+        _xRot = Mathf.Clamp(_xRot, -45f, 45f);
         
-        transform.rotation = _originalRotation;
-        yield return null;
+        transform.localRotation = Quaternion.Euler(_xRot,0.0f,0.0f);
     }
 
     private void ChangeCamera()
@@ -63,7 +48,6 @@ public class PlayerCameraController : MonoBehaviour
         _currentCamera %= camerasPositions.Length;
         transform.position = camerasPositions[_currentCamera].position;
         transform.rotation = camerasPositions[_currentCamera].rotation;
-
-        _originalRotation = camerasPositions[_currentCamera].rotation;
+        
     }
 }
