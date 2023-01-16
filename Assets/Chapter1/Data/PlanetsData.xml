@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<planets>
+   <planet name="Earth" radius="1" distanceToSun="1" rotationPeriod="1" 
+           orbitalVelocity ="1" color="255,0,0"/>
+   
+   <planet name="Mercury" radius="0.3" distanceToSun="0.4" rotationPeriod="58.8"
+           orbitalVelocity="1.59" color="0,255,0"/>
+
+   <planet name="Venus" radius="0.95" distanceToSun="0.72" rotationPeriod="-244.0"
+           orbitalVelocity="1.18" color = "0,0,255"/>
+   
+   <planet name = "Marte" radius="1.5" distanceToSun="1.3" rotationPeriod="1.66"
+           orbitalVelocity="1.3" color="255,0,255" />
+</planets>

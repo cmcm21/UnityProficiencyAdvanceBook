@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Chapter1/UIElements/Challenge1/ThreeOptions.uss?fileID=7433441132597879392&amp;guid=71c21b79ae3c0a047a4334ecfa3fe558&amp;type=3#ThreeOptions" />
+    <ui:VisualElement name="Container" style="width: auto; height: auto; justify-content: space-around;">
+        <ui:Label text="Select Scene" display-tooltip-when-elided="true" class="header" />
+        <ui:Button text="Load Scene 1" display-tooltip-when-elided="true" name="LoadScene1" class="button" />
+        <ui:Button text="Load Scene 2" display-tooltip-when-elided="true" name="LoadScene2" class="button" />
+        <ui:Button text="Load Scene 3" display-tooltip-when-elided="true" name="LoadScene3" class="button" />
+    </ui:VisualElement>
+</ui:UXML>

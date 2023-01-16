@@ -8,33 +8,44 @@ namespace Chapter1
 {
     public class GenerateMaze : MonoBehaviour
     {
-        enum GenerationOption {FROM_SCRIPTABLE,FROM_XML,FROM_IMAGE}
+        public enum GenerationOption {FROM_SCRIPTABLE,FROM_XML,FROM_IMAGE}
         [SerializeField] private Transform wallsContainer;
         [SerializeField] private GameObject wallPrefab;
         [SerializeField] private GenerationOption generateMazeOption;
         [SerializeField] private AssetReference mazeDataRef;
         [SerializeField] private Texture2D mazeImage;
+        
 
         private MazeData _mazeData;
-        private List<GameObject> walls;
-
-        private void Awake()
-        {
-            walls = new List<GameObject>();
-        }
+        private List<GameObject> _walls = new List<GameObject>();
 
         private void Start()
         {
-            if (generateMazeOption == GenerationOption.FROM_IMAGE ||
+            Load();
+        }
+
+        public void SetMazeDataRef(AssetReference newData)
+        {
+            mazeDataRef = newData;
+        }
+
+        public void SetGenerationOption(GenerationOption option)
+        {
+            generateMazeOption = option;
+        }
+
+        private void Load()
+        {
+             if (generateMazeOption == GenerationOption.FROM_IMAGE ||
                 generateMazeOption == GenerationOption.FROM_SCRIPTABLE) {
                 DataManager.LoadMaze(mazeDataRef);
                 DataManager.OnMazeDataLoaded += DataManager_OnMazeDataLoaded;
-            }
-            else if (generateMazeOption == GenerationOption.FROM_XML)
-            {
-                DataManager.LoadMazeXml(mazeDataRef);
-                DataManager.OnMazeXmlDataLoaded += DataManager_OnMazeXmlDataLoaded;
-            }
+             }
+             else if (generateMazeOption == GenerationOption.FROM_XML)
+             {
+                 DataManager.LoadMazeXml(mazeDataRef);
+                 DataManager.OnMazeXmlDataLoaded += DataManager_OnMazeXmlDataLoaded;
+             }           
         }
 
 
@@ -123,7 +134,7 @@ namespace Chapter1
                 wallsContainer
             );
         
-            walls.Add(wall);
+            _walls.Add(wall);
         }
     }
 }

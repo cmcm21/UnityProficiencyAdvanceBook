@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class Planet : MonoBehaviour
@@ -15,6 +16,30 @@ public class Planet : MonoBehaviour
     [SerializeField] private int lenghtOfOrbitRenderer = 100;
     
     private GameObject _sun;
+
+    public void SetData(XmlNode data)
+    {
+       string rawName, rawRadius, rawDistanceToSun, rawRotationPeriod, rawOrbitalVelocity,rawColor;
+       rawName = data.Attributes.GetNamedItem("name").Value;
+       rawRadius = data.Attributes.GetNamedItem("radius").Value;
+       rawDistanceToSun = data.Attributes.GetNamedItem("distanceToSun").Value;
+       rawRotationPeriod = data.Attributes.GetNamedItem("rotationPeriod").Value;
+       rawOrbitalVelocity = data.Attributes.GetNamedItem("orbitalVelocity").Value;
+       rawColor = data.Attributes.GetNamedItem("color").Value;
+       
+       orbitalSpeed *= float.Parse(rawOrbitalVelocity);
+       var rotationSpeed = 1 / float.Parse(rawRotationPeriod);
+       
+       rotationalSpeed *= rotationSpeed;
+       distanceToSun *= float.Parse(rawDistanceToSun);
+
+       var radius = float.Parse(rawRadius);
+       transform.localScale = new Vector3(radius, radius, radius);
+       
+       this.name = rawName;
+       transform.Find("Label").GetComponent<TextMesh>().text = rawName;
+       orbitColor = ValueConverter.Instance.ToColor(rawColor);
+    }
     
     private void Start()
     {

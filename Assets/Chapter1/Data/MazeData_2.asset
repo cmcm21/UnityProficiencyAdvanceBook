@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f19527807500c3547a4158b9fc65e85e, type: 3}
-  m_Name: MazeData
+  m_Name: MazeData_2
   m_EditorClassIdentifier: 
   worldMapSize: 100
   worldMapSquare: 10

@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -28,6 +29,7 @@ public class MazeXMLData
 
     private bool _initialized;
     public bool Initialized => _initialized;
+    
 
     public MazeXMLData(XmlDocument xmlDocument)
     {
@@ -77,6 +79,20 @@ public class MazeXMLData
 
 public class ValueConverter
 {
+    private static ValueConverter instance;
+
+    public static ValueConverter Instance
+    {
+        get
+        {
+            if (instance == null || instance.Equals(null))
+                instance = new ValueConverter();
+            return instance;
+        }
+        private set{}
+    }
+    
+    
     private int _intValue;
     public int IntValue => _intValue;
     
@@ -95,8 +111,13 @@ public class ValueConverter
         else if (typeof(T) == typeof(Color))
             _colorValue = ToColor(value);
     }
+
+    public int ToInt(string intString)
+    {
+        return int.Parse(intString);
+    }
     
-     private Vector3 ToVector(string vectorString)
+     public Vector3 ToVector(string vectorString)
      {
          var values = vectorString.Split(',');
          
@@ -107,7 +128,7 @@ public class ValueConverter
          );
      }
  
-     private Color ToColor(string colorString)
+     public Color ToColor(string colorString)
      {
          try
          {
@@ -123,5 +144,5 @@ public class ValueConverter
          {
              return Color.gray;
          }
-     }   
+     }
 }

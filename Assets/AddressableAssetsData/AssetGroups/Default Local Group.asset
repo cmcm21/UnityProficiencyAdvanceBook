@@ -22,15 +22,19 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - World
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
   - m_GUID: 769cf3fa51154f54b86c9b82d04a1276
     m_Address: Assets/Chapter1/Data/MazeData.xml
     m_ReadOnly: 0
     m_SerializedLabels:
     - World
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1c5dc11a1b82aca4688adb231b8d4a57
+    m_Address: Assets/Chapter1/Data/MazeData_2.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 3bfce0bd1274d6d4abe6a34b628315ba
+    m_Address: Assets/Chapter1/Data/MazeData_3.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 89ae40438218e3d4d9cc7f96a281a48f, type: 2}
   m_SchemaSet:
